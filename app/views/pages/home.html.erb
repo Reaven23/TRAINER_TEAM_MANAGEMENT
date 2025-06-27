@@ -1,2 +1,49 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container mt-4 home-page">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Mes Équipes</h1>
+        <%= link_to new_team_path, class: "btn btn-primary" do %>
+          <i class="fas fa-plus me-2"></i>Nouvelle équipe
+        <% end %>
+      </div>
+
+      <% if @teams.any? %>
+        <div class="row">
+          <% @teams.each do |team| %>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+              <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title"><%= team.name %></h5>
+                  <p class="card-text text-muted"><%= team.category %></p>
+                  <% if team.description.present? %>
+                    <p class="card-text"><%= truncate(team.description, length: 100) %></p>
+                  <% end %>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="small text-muted">
+                      <%= pluralize(team.players.count, 'joueur') %> •
+                      <%= pluralize(team.coaches.count, 'entraîneur') %>
+                    </div>
+                    <%= link_to "Voir détails", team_path(team), class: "btn btn-outline-primary btn-sm" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-5">
+          <div class="mb-4">
+            <i class="fas fa-users fa-3x text-muted"></i>
+          </div>
+          <h3 class="text-muted">Aucune équipe</h3>
+          <p class="text-muted">Commencez par créer votre première équipe</p>
+          <%= link_to new_team_path, class: "btn btn-primary" do %>
+            <i class="fas fa-plus me-2"></i>Créer une équipe
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
