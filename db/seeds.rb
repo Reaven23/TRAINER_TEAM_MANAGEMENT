@@ -8,12 +8,11 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Clear existing data
+# Clear existing data (except skills)
 puts "Clearing existing data..."
 TeamMembership.destroy_all
 UserSkill.destroy_all
 Team.destroy_all
-Skill.destroy_all
 User.destroy_all
 
 puts "Creating users..."
@@ -87,8 +86,10 @@ players.each do |player|
   puts "Added player #{player.full_name} to team"
 end
 
-puts "Creating sample skills..."
+puts "Creating skills..."
 
+# Load skills seed
+load(Rails.root.join('db', 'seeds', 'skills_seed.rb'))
 
 puts "Seed completed successfully!"
 puts "Coach login: adrien.regis@gmail.com / azerty"
