@@ -82,41 +82,24 @@
                 <i class="fas fa-chevron-down"></i>
               </div>
 
-              <div class="collapse show" id="category-<%= category.parameterize %>">
-                <div class="card-body">
+              <div class="collapse" id="category-<%= category.parameterize %>">
+                <div class="card-body p-0">
                   <% category_skills = @skills.where(category: category) %>
                   <% if category_skills.any? %>
-                    <div class="row">
+                    <div class="list-group list-group-flush">
                       <% category_skills.each do |skill| %>
-                        <div class="col-12 col-md-6 col-lg-4 mb-3">
-                          <div class="skill-card">
-                            <div class="card h-100">
-                              <div class="card-body">
-                                <h6 class="card-title"><%= skill.name %></h6>
-                                <p class="card-text text-muted small">
-                                  <%= truncate(skill.description, length: 80) %>
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                  <span class="badge bg-secondary">
-                                    <%= skill.age_group %>
-                                  </span>
-                                  <div class="btn-group btn-group-sm">
-                                    <%= link_to skill_path(skill), class: "btn btn-outline-primary" do %>
-                                      <i class="fas fa-eye"></i>
-                                    <% end %>
-                                    <%= link_to edit_skill_path(skill), class: "btn btn-outline-secondary" do %>
-                                      <i class="fas fa-edit"></i>
-                                    <% end %>
-                                    <%= link_to skill_path(skill),
-                                        method: :delete,
-                                        data: { confirm: "Êtes-vous sûr de vouloir supprimer cette compétence ?" },
-                                        class: "btn btn-outline-danger" do %>
-                                      <i class="fas fa-trash"></i>
-                                    <% end %>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                          <span class="skill-name"><%= skill.name %></span>
+                          <div class="btn-group btn-group-sm">
+                            <%= link_to edit_skill_path(skill), class: "btn btn-outline-secondary" do %>
+                              <i class="fas fa-edit"></i>
+                            <% end %>
+                            <%= link_to skill_path(skill),
+                                method: :delete,
+                                data: { confirm: "Êtes-vous sûr de vouloir supprimer cette compétence ?" },
+                                class: "btn btn-outline-danger" do %>
+                              <i class="fas fa-trash"></i>
+                            <% end %>
                           </div>
                         </div>
                       <% end %>

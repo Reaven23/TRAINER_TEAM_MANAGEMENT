@@ -1,2 +1,168 @@
-<h1>UserSkills#index</h1>
-<p>Find me in app/views/user_skills/index.html.erb</p>
+<div class="container mt-4 user-skills-page" data-controller="user-skills">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="mb-0">Compétences de <%= @user.full_name %></h1>
+          <p class="text-muted mb-0">Gestion des niveaux d'acquisition</p>
+        </div>
+        <div>
+          <%= link_to profile_path(@user), class: "btn btn-outline-secondary me-2" do %>
+            <i class="fas fa-arrow-left me-2"></i>Retour au profil
+          <% end %>
+          <%= link_to "#", class: "btn btn-primary" do %>
+            <i class="fas fa-file-pdf me-2"></i>Générer PDF
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="row mb-4">
+        <div class="col-md-3 col-6 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="text-success mb-1"><%= @user.user_skills.where(status: 'Acquis').count %></h3>
+              <p class="text-muted mb-0">Acquises</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="text-warning mb-1"><%= @user.user_skills.where(status: 'En_Progrès').count %></h3>
+              <p class="text-muted mb-0">En cours</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="text-danger mb-1"><%= @user.user_skills.where(status: 'Non_Acquis').count + (Skill.count - @user.user_skills.count) %></h3>
+              <p class="text-muted mb-0">Non acquises</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="text-info mb-1"><%= @user.user_skills.count %>/<%= Skill.count %></h3>
+              <p class="text-muted mb-0">Total</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtres par catégorie -->
+      <div class="mb-4">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-primary active"
+                  data-user-skills-target="filter"
+                  data-action="click->user-skills#filter"
+                  data-category="all">
+            Toutes les catégories
+          </button>
+          <% Skill::CATEGORIES.each do |category| %>
+            <button type="button" class="btn btn-outline-primary"
+                    data-user-skills-target="filter"
+                    data-action="click->user-skills#filter"
+                    data-category="<%= category %>">
+              <%= category %>
+            </button>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Compétences par catégorie -->
+      <div class="skills-container">
+        <% Skill::CATEGORIES.each do |category| %>
+          <div class="category-section mb-4"
+               data-user-skills-target="category"
+               data-category="<%= category %>">
+            <div class="card">
+              <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+                   data-bs-toggle="collapse"
+                   data-bs-target="#category-<%= category.parameterize %>"
+                   role="button">
+                <h5 class="mb-0">
+                  <i class="fas fa-tag me-2"></i><%= category %>
+                  <span class="badge bg-light text-primary ms-2">
+                    <%= @skills.where(category: category).count %>
+                  </span>
+                </h5>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+
+              <div class="collapse" id="category-<%= category.parameterize %>">
+                <div class="card-body p-0">
+                  <% category_skills = @skills.where(category: category) %>
+                  <% if category_skills.any? %>
+                    <div class="list-group list-group-flush">
+                      <% category_skills.each do |skill| %>
+                        <% user_skill = @user.user_skills.find_by(skill: skill) %>
+                        <div class="list-group-item">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                              <span class="skill-name"><%= skill.name %></span>
+                              <% if user_skill&.status.present? %>
+                                <span class="badge ms-2 <%= status_badge_class(user_skill.status) %>">
+                                  <%= status_label(user_skill.status) %>
+                                </span>
+                              <% else %>
+                                <span class="badge ms-2 bg-danger">
+                                  Non acquise
+                                </span>
+                              <% end %>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                              <% if user_skill %>
+                                <%= form_with model: [@user, user_skill], local: false, class: "d-inline" do |f| %>
+                                  <%= f.hidden_field :skill_id, value: skill.id %>
+                                  <%= f.select :status,
+                                              options_for_select([
+                                                ['Non acquise', 'Non_Acquis'],
+                                                ['En cours d\'acquisition', 'En_Progrès'],
+                                                ['Acquise', 'Acquis']
+                                              ], user_skill.status),
+                                              {},
+                                              {
+                                                class: 'form-select form-select-sm',
+                                                style: 'width: auto;',
+                                                data: { action: 'change->user-skills#updateStatus' }
+                                              } %>
+                                <% end %>
+                              <% else %>
+                                <%= form_with model: [@user, @user.user_skills.build(skill: skill)], local: false, class: "d-inline" do |f| %>
+                                  <%= f.hidden_field :skill_id, value: skill.id %>
+                                  <%= f.select :status,
+                                              options_for_select([
+                                                ['Non acquise', 'Non_Acquis'],
+                                                ['En cours d\'acquisition', 'En_Progrès'],
+                                                ['Acquise', 'Acquis']
+                                              ]),
+                                              {},
+                                              {
+                                                class: 'form-select form-select-sm',
+                                                style: 'width: auto;',
+                                                data: { action: 'change->user-skills#updateStatus' }
+                                              } %>
+                                <% end %>
+                              <% end %>
+                            </div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="text-center py-3">
+                      <p class="text-muted mb-0">Aucune compétence dans cette catégorie</p>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

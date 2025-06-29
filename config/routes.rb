@@ -20,8 +20,10 @@ Rails.application.routes.draw do
   # Skills routes
   resources :skills
 
-  # User Skills routes
-  resources :user_skills
+  # User Skills routes (nested under users)
+  resources :users, only: [] do
+    resources :user_skills, only: [:index, :create, :update, :destroy]
+  end
 
   # Profiles routes (for viewing and editing user profiles)
   resources :profiles, only: [:show, :edit, :update]

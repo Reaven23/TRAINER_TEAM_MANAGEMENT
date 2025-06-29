@@ -1,4 +1,4 @@
-.skills-index-page {
+.user-skills-page {
   .btn-group {
     .btn {
       border-radius: 0.5rem;
@@ -6,44 +6,6 @@
 
       &:last-child {
         margin-right: 0;
-      }
-    }
-  }
-
-  // Styles pour le dropdown mobile
-  .dropdown {
-    .dropdown-toggle {
-      text-align: left;
-      position: relative;
-
-      &::after {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-
-    .dropdown-menu {
-      max-height: 300px;
-      overflow-y: auto;
-
-      .dropdown-item {
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #f8f9fa;
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        &:hover {
-          background-color: #f8f9fa;
-        }
-
-        &.active {
-          background-color: #0d6efd;
-          color: white;
-        }
       }
     }
   }
@@ -81,45 +43,39 @@
         color: #2c3e50;
       }
 
-      .btn-group-sm .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        margin-left: 0.25rem;
+      .form-select {
+        min-width: 150px;
+        font-size: 0.875rem;
       }
-    }
-  }
 
-  .skill-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .card {
-      border: 1px solid #e9ecef;
-      border-radius: 0.5rem;
-    }
-
-    .card-title {
-      color: #2c3e50;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .badge {
-      font-size: 0.75rem;
-    }
-
-    .btn-group-sm .btn {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75rem;
+      .badge {
+        font-size: 0.75rem;
+      }
     }
   }
 
   .collapse {
     transition: all 0.3s ease;
+  }
+
+  // Statistiques
+  .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    h3 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
   }
 
   // Responsive improvements
@@ -138,8 +94,9 @@
       gap: 0.5rem;
       align-items: flex-start !important;
 
-      .btn-group {
+      .form-select {
         align-self: flex-end;
+        min-width: 120px;
       }
     }
 
@@ -149,6 +106,11 @@
       .badge {
         font-size: 0.7rem;
       }
+    }
+
+    .btn-group {
+      flex-wrap: wrap;
+      gap: 0.25rem;
     }
   }
 }
