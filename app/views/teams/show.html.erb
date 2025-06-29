@@ -1,2 +1,122 @@
-<h1>Teams#show</h1>
-<p>Find me in app/views/teams/show.html.erb</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header de l'équipe -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="mb-2"><%= @team.name %></h1>
+          <p class="text-muted mb-0">
+            <i class="fas fa-tag me-2"></i><%= @team.category %>
+          </p>
+          <% if @team.description.present? %>
+            <p class="text-muted mt-2"><%= @team.description %></p>
+          <% end %>
+        </div>
+        <div class="d-flex gap-2">
+          <%= link_to edit_team_path(@team), class: "btn btn-outline-primary" do %>
+            <i class="fas fa-edit me-2"></i>Modifier l'équipe
+          <% end %>
+          <%= link_to teams_path, class: "btn btn-outline-secondary" do %>
+            <i class="fas fa-arrow-left me-2"></i>Retour
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Informations du coach -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-user-tie me-2"></i>Entraîneur
+          </h5>
+        </div>
+        <div class="card-body">
+          <% if @team.coaches.any? %>
+            <% @team.coaches.each do |coach| %>
+              <div class="d-flex align-items-center">
+                <div class="avatar-placeholder me-3">
+                  <i class="fas fa-user-tie"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1"><%= coach.full_name %></h6>
+                  <p class="text-muted mb-0"><%= coach.email %></p>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0">Aucun entraîneur assigné</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Section des joueurs -->
+      <div class="card">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-users me-2"></i>Joueurs (<%= @team.players.count %>)
+          </h5>
+          <%= link_to new_team_player_path(@team), class: "btn btn-light btn-sm" do %>
+            <i class="fas fa-plus me-2"></i>Ajouter un joueur
+          <% end %>
+        </div>
+        <div class="card-body">
+          <% if @team.players.any? %>
+            <div class="row">
+              <% @team.players.each do |player| %>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                  <div class="player-card">
+                    <div class="d-flex align-items-center p-3 border rounded">
+                      <div class="avatar-placeholder me-3">
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h6 class="mb-1">
+                          <%= link_to player.full_name, user_path(player), class: "text-decoration-none" %>
+                        </h6>
+                        <p class="text-muted mb-0 small"><%= player.email %></p>
+                      </div>
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <%= link_to user_path(player), class: "dropdown-item" do %>
+                              <i class="fas fa-eye me-2"></i>Voir profil
+                            <% end %>
+                          </li>
+                          <li>
+                            <%= link_to edit_user_path(player), class: "dropdown-item" do %>
+                              <i class="fas fa-edit me-2"></i>Modifier
+                            <% end %>
+                          </li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li>
+                            <%= link_to team_player_path(@team, player),
+                                method: :delete,
+                                data: { confirm: "Êtes-vous sûr de vouloir retirer #{player.full_name} de l'équipe ?" },
+                                class: "dropdown-item text-danger" do %>
+                              <i class="fas fa-trash me-2"></i>Retirer de l'équipe
+                            <% end %>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="fas fa-users fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">Aucun joueur</h5>
+              <p class="text-muted">Commencez par ajouter des joueurs à votre équipe</p>
+              <%= link_to new_team_player_path(@team), class: "btn btn-primary" do %>
+                <i class="fas fa-plus me-2"></i>Ajouter le premier joueur
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
