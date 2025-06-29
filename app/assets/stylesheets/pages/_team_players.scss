@@ -1,0 +1,45 @@
+.team-players-page {
+  .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+
+    .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: #6c757d;
+      font-weight: 500;
+
+      &:hover {
+        border-color: transparent;
+        color: #495057;
+      }
+
+      &.active {
+        border-bottom-color: #0d6efd;
+        color: #0d6efd;
+        background: none;
+      }
+    }
+  }
+
+  .avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.2rem;
+  }
+
+  .alert-info {
+    background-color: #e7f3ff;
+    border-color: #b3d9ff;
+    color: #0c5460;
+  }
+
+  .border {
+    border-color: #e9ecef !important;
+  }
+}

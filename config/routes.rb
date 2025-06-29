@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       get :coaches
       get :parents
     end
+
+    # Nested routes for team players
+    resources :players, only: [:new, :create, :destroy], controller: 'team_players'
   end
 
   # Skills routes
@@ -20,13 +23,8 @@ Rails.application.routes.draw do
   # User Skills routes
   resources :user_skills
 
-  # Users routes (for coaches to manage players)
-  resources :users, only: [:index, :show, :new, :create, :edit, :update] do
-    member do
-      get :skills_report
-      get :pdf_report
-    end
-  end
+  # Profiles routes (for viewing and editing user profiles)
+  resources :profiles, only: [:show, :edit, :update]
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

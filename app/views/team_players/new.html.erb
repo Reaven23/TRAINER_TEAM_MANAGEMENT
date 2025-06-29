@@ -1,0 +1,110 @@
+<div class="container mt-4 team-players-page">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <!-- Onglets -->
+      <ul class="nav nav-tabs mb-4" id="addPlayerTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="new-player-tab" data-bs-toggle="tab" data-bs-target="#new-player" type="button" role="tab">
+            <i class="fas fa-user-plus me-2"></i>Créer un nouveau joueur
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="existing-user-tab" data-bs-toggle="tab" data-bs-target="#existing-user" type="button" role="tab">
+            <i class="fas fa-users me-2"></i>Ajouter un utilisateur existant
+          </button>
+        </li>
+      </ul>
+
+      <!-- Contenu des onglets -->
+      <div class="tab-content" id="addPlayerTabsContent">
+        <!-- Onglet : Créer un nouveau joueur -->
+        <div class="tab-pane fade show active" id="new-player" role="tabpanel">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-user-plus me-2"></i>Créer un nouveau joueur pour <%= @team.name %>
+              </h5>
+            </div>
+            <div class="card-body">
+              <%= simple_form_for @user, url: team_players_path(@team), method: :post do |f| %>
+                <div class="row">
+                  <div class="col-md-6">
+                    <%= f.input :first_name, required: true %>
+                  </div>
+                  <div class="col-md-6">
+                    <%= f.input :last_name, required: true %>
+                  </div>
+                </div>
+
+                <%= f.input :email, required: true %>
+                <%= f.input :phone %>
+                <%= f.input :birth_date, as: :date, html5: true %>
+
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Le mot de passe par défaut sera "azerty". Le joueur pourra le changer plus tard.
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <%= link_to team_path(@team), class: "btn btn-outline-secondary" do %>
+                    <i class="fas fa-arrow-left me-2"></i>Annuler
+                  <% end %>
+                  <%= f.button :submit, "Créer et ajouter à l'équipe", class: "btn btn-primary" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Onglet : Ajouter un utilisateur existant -->
+        <div class="tab-pane fade" id="existing-user" role="tabpanel">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-users me-2"></i>Sélectionner un utilisateur existant
+              </h5>
+            </div>
+            <div class="card-body">
+              <% if @users.any? %>
+                <div class="row">
+                  <% @users.each do |user| %>
+                    <div class="col-12 col-md-6 mb-3">
+                      <div class="d-flex align-items-center p-3 border rounded">
+                        <div class="avatar-placeholder me-3">
+                          <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                          <h6 class="mb-1"><%= user.full_name %></h6>
+                          <p class="text-muted mb-0 small"><%= user.email %></p>
+                        </div>
+                        <div>
+                          <%= form_with url: team_players_path(@team), method: :post, local: true do |f| %>
+                            <%= f.hidden_field :user_id, value: user.id %>
+                            <%= f.submit "Ajouter", class: "btn btn-success btn-sm" %>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="text-center py-4">
+                  <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                  <h5 class="text-muted">Aucun utilisateur disponible</h5>
+                  <p class="text-muted">Tous les utilisateurs sont déjà dans cette équipe ou il n'y a pas d'utilisateurs dans le système.</p>
+                  <p class="text-muted">Utilisez l'onglet "Créer un nouveau joueur" pour ajouter quelqu'un.</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <%= link_to team_path(@team), class: "btn btn-outline-secondary" do %>
+          <i class="fas fa-arrow-left me-2"></i>Retour à l'équipe
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
