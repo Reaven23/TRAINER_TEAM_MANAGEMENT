@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     end
 
     # Player Assessments routes
-    resources :player_assessments, only: [:create, :update]
+    resources :player_assessments, only: [:new, :create, :update]
   end
 
   # Profiles routes (for viewing and editing user profiles)

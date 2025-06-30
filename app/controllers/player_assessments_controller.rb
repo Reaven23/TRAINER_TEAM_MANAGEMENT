@@ -2,6 +2,10 @@ class PlayerAssessmentsController < ApplicationController
   before_action :set_user
   before_action :set_assessment, only: [:update]
 
+  def new
+    @assessment = @user.player_assessments.build
+  end
+
   def create
     @assessment = @user.player_assessments.build(assessment_params)
     @assessment.assessment_date = Date.current
