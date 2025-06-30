@@ -5,7 +5,7 @@ class TeamMembership < ApplicationRecord
 
   # Validations
   validates :role, presence: true, inclusion: { in: %w[player coach parent] }
-  validates :user_id, uniqueness: { scope: :team_id }
+  validates :user_id, uniqueness: { scope: [:team_id, :role], message: "est déjà assigné à ce rôle dans cette équipe" }
 
   # Scopes
   scope :players, -> { where(role: 'player') }

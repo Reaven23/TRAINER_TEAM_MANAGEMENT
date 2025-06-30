@@ -1,2 +1,59 @@
-<h1>Teams#new</h1>
-<p>Find me in app/views/teams/new.html.erb</p>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="fas fa-plus me-2"></i>Créer une nouvelle équipe
+            </h5>
+          </div>
+        </div>
+        <div class="card-body">
+          <%= simple_form_for @team, html: { class: 'team-form' } do |f| %>
+            <div class="row">
+              <div class="col-12">
+                <%= f.input :name,
+                            label: 'Nom de l\'équipe',
+                            placeholder: 'Ex: Équipe A, Lions, Champions...',
+                            input_html: { class: 'form-control' },
+                            hint: 'Choisissez un nom représentatif pour votre équipe' %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <%= f.input :category,
+                            label: 'Catégorie d\'âge',
+                            collection: [['U11 - Moins de 11 ans', 'U11'],
+                                        ['U13 - Moins de 13 ans', 'U13'],
+                                        ['U15 - Moins de 15 ans', 'U15'],
+                                        ['U18 - Moins de 18 ans', 'U18'],
+                                        ['U21 - Moins de 21 ans', 'U21'],
+                                        ['Seniors - Plus de 21 ans', 'Seniors']],
+                            include_blank: 'Sélectionnez une catégorie',
+                            input_html: { class: 'form-select' },
+                            hint: 'Sélectionnez la catégorie d\'âge appropriée' %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <%= f.input :description,
+                            label: 'Description (optionnel)',
+                            placeholder: 'Décrivez votre équipe, ses objectifs, son style de jeu...',
+                            input_html: { rows: 4, class: 'form-control' },
+                            hint: 'Informations supplémentaires sur l\'équipe' %>
+              </div>
+            </div>
+
+            <div class="text-center mt-4">
+              <%= f.button :submit, 'Créer l\'équipe', class: 'btn btn-primary btn-lg me-3' %>
+              <%= link_to 'Annuler', root_path, class: 'btn btn-outline-secondary btn-lg' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

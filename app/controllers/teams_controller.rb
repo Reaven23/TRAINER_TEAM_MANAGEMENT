@@ -16,7 +16,10 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(team_params)
     if @team.save
-      redirect_to @team, notice: 'Équipe créée avec succès.'
+      unless @team.team_memberships.exists?(user: current_user, role: 'coach')
+        @team.team_memberships.create(user: current_user, role: 'coach')
+      end
+      redirect_to @team, notice: 'Équipe créée avec succès. Vous êtes maintenant l\'entraîneur de cette équipe.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +38,7 @@ class TeamsController < ApplicationController
 
   def destroy
     @team.destroy
-    redirect_to teams_url, notice: 'Équipe supprimée avec succès.'
+    redirect_to root_path, notice: 'Équipe supprimée avec succès.'
   end
 
   def players

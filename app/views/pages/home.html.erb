@@ -22,11 +22,28 @@
                       <%= pluralize(team.players.count, 'joueur') %> •
                       <%= pluralize(team.coaches.count, 'entraîneur') %>
                     </div>
-                    <%= link_to "Voir détails", team_path(team), class: "btn btn-outline-primary btn-sm" %>
+                    <div class="btn-group" role="group">
+                      <%= link_to "Voir détails", team_path(team), class: "btn btn-outline-primary btn-sm" %>
+                      <%= link_to team_path(team),
+                                  data: {
+                                    turbo_method: :delete,
+                                    turbo_confirm: "Êtes-vous sûr de vouloir supprimer l'équipe '#{team.name}' ? Cette action est irréversible."
+                                  },
+                                  class: "btn btn-outline-danger btn-sm" do %>
+                        <i class="fas fa-trash"></i>
+                      <% end %>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          <% end %>
+        </div>
+
+        <!-- Bouton pour créer une nouvelle équipe après la liste -->
+        <div class="text-center mt-4">
+          <%= link_to new_team_path, class: "btn btn-primary" do %>
+            <i class="fas fa-plus me-2"></i>Créer une autre équipe
           <% end %>
         </div>
       <% else %>
