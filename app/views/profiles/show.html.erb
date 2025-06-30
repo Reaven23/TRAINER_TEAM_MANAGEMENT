@@ -90,6 +90,96 @@
             </div>
           </div>
 
+          <!-- Bilan de compétences -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <h6 class="text-muted mb-3">
+                <i class="fas fa-clipboard-check me-2"></i>Bilan de compétences
+              </h6>
+
+              <% latest_assessment = @user.player_assessments.latest_for_user(@user) %>
+
+              <% if latest_assessment %>
+                <!-- Affichage du dernier bilan -->
+                <div class="card border-primary">
+                  <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span>Dernier bilan - <%= latest_assessment.assessment_date.strftime("%d/%m/%Y") %></span>
+                      <button class="btn btn-light btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#assessmentForm">
+                        <i class="fas fa-edit me-1"></i>Modifier
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <h6 class="text-primary">Compétences clés</h6>
+                        <p class="small"><%= simple_format(latest_assessment.key_skills) %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-warning">Axes d'amélioration</h6>
+                        <p class="small"><%= simple_format(latest_assessment.areas_to_improve) %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-info">Notes de l'entraîneur</h6>
+                        <p class="small"><%= simple_format(latest_assessment.coach_notes) %></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+
+              <!-- Formulaire (caché par défaut si bilan existe) -->
+              <div class="collapse <%= 'show' unless latest_assessment %>" id="assessmentForm">
+                <div class="card mt-3">
+                  <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">
+                      <i class="fas fa-plus me-2"></i>
+                      <%= latest_assessment ? 'Modifier le bilan' : 'Nouveau bilan de compétences' %>
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <%= simple_form_for [@user, latest_assessment || @user.player_assessments.build],
+                                        html: { class: 'assessment-form' } do |f| %>
+
+                      <div class="row">
+                        <div class="col-md-4">
+                          <%= f.input :key_skills,
+                                      label: 'Compétences clés à travailler',
+                                      placeholder: 'Listez les compétences principales que le joueur doit développer...',
+                                      input_html: { rows: 4, class: 'form-control' } %>
+                        </div>
+                        <div class="col-md-4">
+                          <%= f.input :areas_to_improve,
+                                      label: 'Axes d\'amélioration',
+                                      placeholder: 'Détaillez les points à améliorer...',
+                                      input_html: { rows: 4, class: 'form-control' } %>
+                        </div>
+                        <div class="col-md-4">
+                          <%= f.input :coach_notes,
+                                      label: 'Notes de l\'entraîneur',
+                                      placeholder: 'Observations et recommandations...',
+                                      input_html: { rows: 4, class: 'form-control' } %>
+                        </div>
+                      </div>
+
+                      <div class="text-center mt-3">
+                        <%= f.button :submit,
+                                     latest_assessment ? 'Mettre à jour' : 'Créer le bilan',
+                                     class: 'btn btn-success' %>
+                        <% if latest_assessment %>
+                          <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="collapse" data-bs-target="#assessmentForm">
+                            Annuler
+                          </button>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-4 text-center">
             <%= link_to :back, class: "btn btn-outline-secondary" do %>
               <i class="fas fa-arrow-left me-2"></i>Retour

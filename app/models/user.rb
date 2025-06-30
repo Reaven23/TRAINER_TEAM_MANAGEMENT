@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :teams, through: :team_memberships
   has_many :user_skills, dependent: :destroy
   has_many :skills, through: :user_skills
+  has_many :player_assessments, dependent: :destroy
 
   # Validations
   validates :first_name, presence: true

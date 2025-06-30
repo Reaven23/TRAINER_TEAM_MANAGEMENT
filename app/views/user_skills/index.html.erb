@@ -10,7 +10,7 @@
           <%= link_to profile_path(@user), class: "btn btn-outline-secondary me-2" do %>
             <i class="fas fa-arrow-left me-2"></i>Retour au profil
           <% end %>
-          <%= link_to "#", class: "btn btn-primary" do %>
+          <%= link_to pdf_user_user_skills_path(@user, format: :pdf), class: "btn btn-primary", target: "_blank" do %>
             <i class="fas fa-file-pdf me-2"></i>Générer PDF
           <% end %>
         </div>

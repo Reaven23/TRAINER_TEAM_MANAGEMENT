@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'player_assessments/create'
+  get 'player_assessments/update'
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
@@ -22,7 +24,14 @@ Rails.application.routes.draw do
 
   # User Skills routes (nested under users)
   resources :users, only: [] do
-    resources :user_skills, only: [:index, :create, :update, :destroy]
+    resources :user_skills, only: [:index, :create, :update, :destroy] do
+      collection do
+        get :pdf
+      end
+    end
+
+    # Player Assessments routes
+    resources :player_assessments, only: [:create, :update]
   end
 
   # Profiles routes (for viewing and editing user profiles)

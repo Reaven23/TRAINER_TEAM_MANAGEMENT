@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_27_160833) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_30_123853) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "player_assessments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "key_skills"
+    t.text "areas_to_improve"
+    t.text "coach_notes"
+    t.date "assessment_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_player_assessments_on_user_id"
+  end
 
   create_table "skills", force: :cascade do |t|
     t.string "name"
@@ -68,6 +79,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_27_160833) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "player_assessments", "users"
   add_foreign_key "team_memberships", "teams"
   add_foreign_key "team_memberships", "users"
   add_foreign_key "user_skills", "skills"

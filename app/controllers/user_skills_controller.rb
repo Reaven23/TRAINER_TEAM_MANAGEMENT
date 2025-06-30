@@ -1,9 +1,30 @@
 class UserSkillsController < ApplicationController
-  before_action :set_user, only: [:index, :create, :update]
+  before_action :set_user, only: [:index, :create, :update, :pdf]
   before_action :set_user_skill, only: [:update, :destroy]
 
   def index
     @skills = Skill.all
+  end
+
+  def pdf
+    @skills = Skill.all
+    @latest_assessment = @user.player_assessments.latest_for_user(@user)
+    respond_to do |format|
+      format.pdf do
+        render pdf: "competences_#{@user.full_name.parameterize}",
+               template: "user_skills/pdf",
+               layout: false,
+               page_size: 'A4',
+               margin: {
+                 top: 20,
+                 bottom: 20,
+                 left: 20,
+                 right: 20
+               },
+               orientation: 'Portrait',
+               title: "Compétences de #{@user.full_name}"
+      end
+    end
   end
 
   def show

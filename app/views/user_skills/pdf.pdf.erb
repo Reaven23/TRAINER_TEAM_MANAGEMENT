@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Compétences de <%= @user.full_name %></title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 10px;
+      border: 2px solid #0056b3;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      margin: 10px 0 0 0;
+      font-size: 16px;
+      font-weight: 500;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    }
+
+    .stats-container {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      gap: 5px;
+      flex-wrap: nowrap !important;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .stat-card {
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 22% !important;
+      text-align: center;
+      padding: 8px 3px;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      border: 1px solid rgba(0,0,0,0.1);
+      min-width: 0;
+      max-width: 22%;
+      box-sizing: border-box;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stat-card.acquired {
+      background-color: #28a745;
+    }
+
+    .stat-card.in-progress {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .stat-card.not-acquired {
+      background-color: #dc3545;
+    }
+
+    .stat-card.total {
+      background-color: #17a2b8;
+    }
+
+    .stat-number {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 1px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 8px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .skills-section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: white;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .section-title.acquired {
+      background-color: #28a745;
+    }
+
+    .section-title.in-progress {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .section-title.not-acquired {
+      background-color: #dc3545;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px;
+    }
+
+    .skill-item {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border-left: 4px solid;
+      background-color: white;
+      margin-bottom: 5px;
+      border: 1px solid #dee2e6;
+    }
+
+    .skill-item.acquired {
+      border-left-color: #28a745;
+      background-color: #d4edda;
+    }
+
+    .skill-item.in-progress {
+      border-left-color: #ffc107;
+      background-color: #fff3cd;
+    }
+
+    .skill-item.not-acquired {
+      border-left-color: #dc3545;
+      background-color: #f8d7da;
+    }
+
+    .skill-name {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .skill-category {
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 2px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #6c757d;
+      border-top: 1px solid #dee2e6;
+      padding-top: 15px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Compétences de <%= @user.full_name %></h1>
+    <p>
+      <% if @user.teams.any? %>
+        Équipe : <%= @user.teams.first.name %> - <%= @user.teams.first.category %>
+      <% else %>
+        Aucune équipe assignée
+      <% end %>
+    </p>
+    <p>Généré le <%= Date.current.strftime("%d/%m/%Y") %></p>
+  </div>
+
+  <div class="stats-container">
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+      <tr>
+        <td style="width: 25%; padding: 8px 3px; text-align: center; background-color: #28a745; color: white; font-weight: bold; border-radius: 4px; border: 1px solid #28a745;">
+          <div style="font-size: 16px; font-weight: bold; margin-bottom: 1px;"><%= @user.user_skills.where(status: 'Acquis').count %></div>
+          <div style="font-size: 8px; text-transform: uppercase;">Acquises</div>
+        </td>
+        <td style="width: 25%; padding: 8px 3px; text-align: center; background-color: #ffc107; color: #212529; font-weight: bold; border-radius: 4px; border: 1px solid #ffc107;">
+          <div style="font-size: 16px; font-weight: bold; margin-bottom: 1px;"><%= @user.user_skills.where(status: 'En_Progrès').count %></div>
+          <div style="font-size: 8px; text-transform: uppercase;">En cours</div>
+        </td>
+        <td style="width: 25%; padding: 8px 3px; text-align: center; background-color: #dc3545; color: white; font-weight: bold; border-radius: 4px; border: 1px solid #dc3545;">
+          <div style="font-size: 16px; font-weight: bold; margin-bottom: 1px;"><%= @user.user_skills.where(status: 'Non_Acquis').count + (Skill.count - @user.user_skills.count) %></div>
+          <div style="font-size: 8px; text-transform: uppercase;">Non acquises</div>
+        </td>
+        <td style="width: 25%; padding: 8px 3px; text-align: center; background-color: #17a2b8; color: white; font-weight: bold; border-radius: 4px; border: 1px solid #17a2b8;">
+          <div style="font-size: 16px; font-weight: bold; margin-bottom: 1px;"><%= @user.user_skills.count %>/<%= Skill.count %></div>
+          <div style="font-size: 8px; text-transform: uppercase;">Total</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Compétences acquises -->
+  <div class="skills-section">
+    <div class="section-title acquired">
+      ✅ Compétences acquises (<%= @user.user_skills.where(status: 'Acquis').count %>)
+    </div>
+    <div class="skills-grid">
+      <% @user.user_skills.where(status: 'Acquis').includes(:skill).each do |user_skill| %>
+        <div class="skill-item acquired">
+          <div class="skill-name"><%= user_skill.skill.name %></div>
+          <div class="skill-category"><%= user_skill.skill.category %></div>
+        </div>
+      <% end %>
+      <% if @user.user_skills.where(status: 'Acquis').empty? %>
+        <div class="skill-item acquired">
+          <div class="skill-name">Aucune compétence acquise pour le moment</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Compétences en cours d'acquisition -->
+  <div class="skills-section">
+    <div class="section-title in-progress">
+      🔄 Compétences en cours d'acquisition (<%= @user.user_skills.where(status: 'En_Progrès').count %>)
+    </div>
+    <div class="skills-grid">
+      <% @user.user_skills.where(status: 'En_Progrès').includes(:skill).each do |user_skill| %>
+        <div class="skill-item in-progress">
+          <div class="skill-name"><%= user_skill.skill.name %></div>
+          <div class="skill-category"><%= user_skill.skill.category %></div>
+        </div>
+      <% end %>
+      <% if @user.user_skills.where(status: 'En_Progrès').empty? %>
+        <div class="skill-item in-progress">
+          <div class="skill-name">Aucune compétence en cours d'acquisition</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Compétences non acquises -->
+  <div class="skills-section">
+    <div class="section-title not-acquired">
+      ❌ Compétences non acquises (<%= @user.user_skills.where(status: 'Non_Acquis').count + (Skill.count - @user.user_skills.count) %>)
+    </div>
+    <div class="skills-grid">
+      <% @user.user_skills.where(status: 'Non_Acquis').includes(:skill).each do |user_skill| %>
+        <div class="skill-item not-acquired">
+          <div class="skill-name"><%= user_skill.skill.name %></div>
+          <div class="skill-category"><%= user_skill.skill.category %></div>
+        </div>
+      <% end %>
+      <% (Skill.all - @user.skills).each do |skill| %>
+        <div class="skill-item not-acquired">
+          <div class="skill-name"><%= skill.name %></div>
+          <div class="skill-category"><%= skill.category %></div>
+        </div>
+      <% end %>
+      <% if @user.user_skills.where(status: 'Non_Acquis').empty? && (Skill.all - @user.skills).empty? %>
+        <div class="skill-item not-acquired">
+          <div class="skill-name">Toutes les compétences sont acquises !</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Compétences clés à travailler -->
+  <% if @latest_assessment %>
+    <div class="page-break"></div>
+
+    <div class="skills-section">
+      <div class="section-title" style="background-color: #6f42c1; color: white;">
+        🎯 Compétences clés à travailler
+      </div>
+
+      <div style="background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+        <div class="row" style="margin: 0;">
+          <div class="col-md-4" style="padding: 0 10px;">
+            <h6 style="color: #6f42c1; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+              Compétences clés
+            </h6>
+            <div style="background-color: #f8f9fa; padding: 12px; border-radius: 5px; border-left: 4px solid #6f42c1; font-size: 12px; line-height: 1.4;">
+              <%= simple_format(@latest_assessment.key_skills) %>
+            </div>
+          </div>
+
+          <div class="col-md-4" style="padding: 0 10px;">
+            <h6 style="color: #fd7e14; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+              Axes d'amélioration
+            </h6>
+            <div style="background-color: #f8f9fa; padding: 12px; border-radius: 5px; border-left: 4px solid #fd7e14; font-size: 12px; line-height: 1.4;">
+              <%= simple_format(@latest_assessment.areas_to_improve) %>
+            </div>
+          </div>
+
+          <div class="col-md-4" style="padding: 0 10px;">
+            <h6 style="color: #17a2b8; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+              Notes de l'entraîneur
+            </h6>
+            <div style="background-color: #f8f9fa; padding: 12px; border-radius: 5px; border-left: 4px solid #17a2b8; font-size: 12px; line-height: 1.4;">
+              <%= simple_format(@latest_assessment.coach_notes) %>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #dee2e6; text-align: center;">
+          <small style="color: #6c757d; font-style: italic;">
+            Bilan établi le <%= @latest_assessment.assessment_date.strftime("%d/%m/%Y") %>
+          </small>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="footer">
+    <p>Document généré automatiquement par le système de gestion des compétences</p>
+    <p>Entraîneur : <%= @user.teams.first&.team_memberships&.find_by(role: 'coach')&.user&.full_name || 'Non assigné' %></p>
+  </div>
+</body>
+</html>
