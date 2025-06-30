@@ -9,14 +9,14 @@ class Team < ApplicationRecord
 
   # Methods
   def players
-    users.joins(:team_memberships).where(team_memberships: { role: 'player' })
+    users.joins(:team_memberships).where(team_memberships: { role: 'player' }).distinct
   end
 
   def coaches
-    users.joins(:team_memberships).where(team_memberships: { role: 'coach' })
+    users.joins(:team_memberships).where(team_memberships: { role: 'coach' }).distinct
   end
 
   def parents
-    users.joins(:team_memberships).where(team_memberships: { role: 'parent' })
+    users.joins(:team_memberships).where(team_memberships: { role: 'parent' }).distinct
   end
 end
