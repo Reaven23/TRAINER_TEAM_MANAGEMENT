@@ -13,10 +13,16 @@ Rails.application.routes.draw do
       get :players
       get :coaches
       get :parents
+      get :add_coach
+      post :create_coach
+      delete :remove_coach
     end
 
     # Nested routes for team players
     resources :players, only: [:new, :create, :destroy], controller: 'team_players'
+
+    # Nested routes for team coaches
+    resources :coaches, only: [:new, :create, :destroy], controller: 'team_coaches'
   end
 
   # Skills routes

@@ -326,8 +326,17 @@
   <% end %>
 
   <div class="footer">
-    <p>Document généré automatiquement par le système de gestion des compétences</p>
-    <p>Entraîneur : <%= @user.teams.first&.team_memberships&.find_by(role: 'coach')&.user&.full_name || 'Non assigné' %></p>
+    <p>Document généré automatiquement par BenchBoss</p>
+    <% if @user.teams.any? %>
+      <% coaches = @user.teams.first.team_memberships.where(role: 'coach').includes(:user) %>
+      <% if coaches.any? %>
+        <p><%= coaches.count > 1 ? 'Entraîneurs' : 'Entraîneur' %> : <%= coaches.map { |c| c.user.full_name }.join(', ') %></p>
+      <% else %>
+        <p>Entraîneur : Non assigné</p>
+      <% end %>
+    <% else %>
+      <p>Entraîneur : Non assigné</p>
+    <% end %>
   </div>
 </body>
 </html>

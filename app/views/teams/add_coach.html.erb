@@ -1,0 +1,98 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="fas fa-user-tie me-2"></i>Ajouter un entraîneur
+            </h5>
+            <%= link_to team_path(@team), class: "btn btn-light btn-sm" do %>
+              <i class="fas fa-arrow-left me-2"></i>Retour à l'équipe
+            <% end %>
+          </div>
+        </div>
+        <div class="card-body">
+          <h6 class="mb-3">Équipe : <%= @team.name %></h6>
+
+          <!-- Onglets pour choisir entre utilisateur existant ou nouveau -->
+          <ul class="nav nav-tabs mb-3" id="coachTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="existing-tab" data-bs-toggle="tab" data-bs-target="#existing" type="button" role="tab">
+                <i class="fas fa-users me-2"></i>Utilisateur existant
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new" type="button" role="tab">
+                <i class="fas fa-user-plus me-2"></i>Nouvel utilisateur
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="coachTabContent">
+            <!-- Onglet utilisateur existant -->
+            <div class="tab-pane fade show active" id="existing" role="tabpanel">
+              <%= form_tag create_coach_team_path(@team), method: :post, class: 'coach-form' do %>
+                <div class="mb-3">
+                  <label for="user_id" class="form-label">Sélectionner un utilisateur existant</label>
+                  <select name="user_id" id="user_id" class="form-select" required>
+                    <option value="">Choisir un utilisateur...</option>
+                    <% @users.each do |user| %>
+                      <% unless @team.team_memberships.exists?(user: user, role: 'coach') %>
+                        <option value="<%= user.id %>"><%= user.full_name %> (<%= user.email %>)</option>
+                      <% end %>
+                    <% end %>
+                  </select>
+                  <div class="form-text">Seuls les utilisateurs qui ne sont pas déjà entraîneurs de cette équipe sont affichés.</div>
+                </div>
+
+                <div class="text-center">
+                  <%= submit_tag "Ajouter comme entraîneur", class: "btn btn-primary" %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Onglet nouvel utilisateur -->
+            <div class="tab-pane fade" id="new" role="tabpanel">
+              <%= form_tag create_coach_team_path(@team), method: :post, class: 'coach-form' do %>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="new_user_first_name" class="form-label">Prénom</label>
+                      <input type="text" name="new_user[first_name]" id="new_user_first_name" class="form-control" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="new_user_last_name" class="form-label">Nom</label>
+                      <input type="text" name="new_user[last_name]" id="new_user_last_name" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="new_user_email" class="form-label">Email</label>
+                  <input type="email" name="new_user[email]" id="new_user_email" class="form-control" required>
+                  <div class="form-text">Un mot de passe temporaire sera généré automatiquement.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="new_user_phone" class="form-label">Téléphone (optionnel)</label>
+                  <input type="tel" name="new_user[phone]" id="new_user_phone" class="form-control">
+                </div>
+
+                <div class="text-center">
+                  <%= submit_tag "Créer et ajouter comme entraîneur", class: "btn btn-success" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <%= link_to "Annuler", team_path(@team), class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
