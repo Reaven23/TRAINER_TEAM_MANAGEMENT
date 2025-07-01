@@ -113,40 +113,85 @@
                                 </span>
                               <% end %>
                             </div>
-                            <div class="btn-group btn-group-sm">
-                              <% if user_skill %>
-                                <%= form_with model: [@user, user_skill], local: false, class: "d-inline" do |f| %>
-                                  <%= f.hidden_field :skill_id, value: skill.id %>
-                                  <%= f.select :status,
-                                              options_for_select([
-                                                ['Non acquise', 'Non_Acquis'],
-                                                ['En cours d\'acquisition', 'En_Progrès'],
-                                                ['Acquise', 'Acquis']
-                                              ], user_skill.status),
-                                              {},
-                                              {
-                                                class: 'form-select form-select-sm',
-                                                style: 'width: auto;',
-                                                data: { action: 'change->user-skills#updateStatus' }
-                                              } %>
+                            <div class="d-flex flex-column align-items-end">
+                              <div class="d-flex flex-row gap-1 mb-1">
+                                <% if user_skill %>
+                                  <%= form_with model: [@user, user_skill], local: false, class: "d-flex flex-row gap-1" do |f| %>
+                                    <%= f.hidden_field :skill_id, value: skill.id %>
+                                    <%= f.hidden_field :status, value: user_skill.status, id: "status_#{skill.id}" %>
+
+                                    <button type="button"
+                                            class="btn btn-sm <%= user_skill.status == 'Non_Acquis' ? 'btn-danger' : 'btn-outline-danger' %>"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="Non_Acquis"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="Non acquise">
+                                      <i class="fas fa-times"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-sm <%= user_skill.status == 'En_Progrès' ? 'btn-warning' : 'btn-outline-warning' %>"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="En_Progrès"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="En cours d'acquisition">
+                                      <i class="fas fa-clock"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-sm <%= user_skill.status == 'Acquis' ? 'btn-success' : 'btn-outline-success' %>"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="Acquis"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="Acquise">
+                                      <i class="fas fa-check"></i>
+                                    </button>
+                                  <% end %>
+                                <% else %>
+                                  <%= form_with model: [@user, @user.user_skills.build(skill: skill, status: 'Non_Acquis')], local: false, class: "d-flex flex-row gap-1" do |f| %>
+                                    <%= f.hidden_field :skill_id, value: skill.id %>
+                                    <%= f.hidden_field :status, value: 'Non_Acquis', id: "status_#{skill.id}" %>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="Non_Acquis"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="Non acquise">
+                                      <i class="fas fa-times"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-warning"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="En_Progrès"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="En cours d'acquisition">
+                                      <i class="fas fa-clock"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-success"
+                                            data-action="click->user-skills#updateStatusWithButton"
+                                            data-skill-id="<%= skill.id %>"
+                                            data-status="Acquis"
+                                            data-form-id="<%= f.object_name %>"
+                                            title="Acquise">
+                                      <i class="fas fa-check"></i>
+                                    </button>
+                                  <% end %>
                                 <% end %>
-                              <% else %>
-                                <%= form_with model: [@user, @user.user_skills.build(skill: skill)], local: false, class: "d-inline" do |f| %>
-                                  <%= f.hidden_field :skill_id, value: skill.id %>
-                                  <%= f.select :status,
-                                              options_for_select([
-                                                ['Non acquise', 'Non_Acquis'],
-                                                ['En cours d\'acquisition', 'En_Progrès'],
-                                                ['Acquise', 'Acquis']
-                                              ]),
-                                              {},
-                                              {
-                                                class: 'form-select form-select-sm',
-                                                style: 'width: auto;',
-                                                data: { action: 'change->user-skills#updateStatus' }
-                                              } %>
-                                <% end %>
-                              <% end %>
+                              </div>
+                              <div class="d-flex flex-row gap-1">
+                                <small class="text-muted">Non acquis</small>
+                                <small class="text-muted">En cours</small>
+                                <small class="text-muted">Acquis</small>
+                              </div>
                             </div>
                           </div>
                         </div>

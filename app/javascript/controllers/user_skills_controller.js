@@ -26,6 +26,112 @@ export default class extends Controller {
     })
   }
 
+  updateStatusWithButton(event) {
+    event.preventDefault()
+    const button = event.currentTarget
+    const form = button.closest('form')
+    const skillId = button.dataset.skillId
+    const newStatus = button.dataset.status
+    const oldStatus = this.getCurrentStatusFromButtons(button)
+
+    // Mettre à jour le champ caché avec la nouvelle valeur
+    const statusField = form.querySelector('input[name="user_skill[status]"]')
+    if (statusField) {
+      statusField.value = newStatus
+    }
+
+    const formData = new FormData(form)
+
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        // Mettre à jour l'apparence des boutons
+        this.updateButtonStates(button, newStatus)
+        // Mettre à jour le badge
+        this.updateBadgeFromButton(button, newStatus)
+        // Mettre à jour les statistiques
+        this.updateStatistics(oldStatus, newStatus)
+      } else {
+        console.error('Erreur:', data.message)
+      }
+    })
+    .catch(error => {
+      console.error('Erreur:', error)
+    })
+  }
+
+  updateButtonStates(clickedButton, newStatus) {
+    const buttonContainer = clickedButton.closest('.d-flex.flex-row.gap-1')
+    const buttons = buttonContainer.querySelectorAll('button')
+
+    buttons.forEach(button => {
+      const status = button.dataset.status
+      button.classList.remove('btn-danger', 'btn-warning', 'btn-success')
+      button.classList.remove('btn-outline-danger', 'btn-outline-warning', 'btn-outline-success')
+
+      if (status === newStatus) {
+        // Bouton actif
+        switch(status) {
+          case 'Non_Acquis':
+            button.classList.add('btn-danger')
+            break
+          case 'En_Progrès':
+            button.classList.add('btn-warning')
+            break
+          case 'Acquis':
+            button.classList.add('btn-success')
+            break
+        }
+      } else {
+        // Bouton inactif
+        switch(status) {
+          case 'Non_Acquis':
+            button.classList.add('btn-outline-danger')
+            break
+          case 'En_Progrès':
+            button.classList.add('btn-outline-warning')
+            break
+          case 'Acquis':
+            button.classList.add('btn-outline-success')
+            break
+        }
+      }
+    })
+  }
+
+  updateBadgeFromButton(button, status) {
+    const listItem = button.closest('.list-group-item')
+    let badge = listItem.querySelector('.badge')
+
+    if (!badge) {
+      badge = document.createElement('span')
+      badge.className = 'badge ms-2'
+      listItem.querySelector('.skill-name').after(badge)
+    }
+
+    // Mettre à jour le badge selon le statut
+    badge.className = `badge ms-2 ${this.getBadgeClass(status)}`
+    badge.textContent = this.getStatusLabel(status)
+  }
+
+  getCurrentStatusFromButtons(button) {
+    const buttonContainer = button.closest('.d-flex.flex-row.gap-1')
+    const activeButton = buttonContainer.querySelector('.btn-danger, .btn-warning, .btn-success')
+
+    if (activeButton) {
+      return activeButton.dataset.status
+    }
+    return null
+  }
+
   updateStatus(event) {
     event.preventDefault()
     const form = event.target.closest('form')

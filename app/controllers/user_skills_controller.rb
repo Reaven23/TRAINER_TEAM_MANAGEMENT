@@ -36,6 +36,9 @@ class UserSkillsController < ApplicationController
   def create
     @user_skill = @user.user_skills.build(user_skill_params)
 
+    # S'assurer qu'un statut est défini
+    @user_skill.status ||= 'Non_Acquis'
+
     if @user_skill.save
       respond_to do |format|
         format.html { redirect_to user_skills_path(@user), notice: 'Compétence ajoutée avec succès.' }

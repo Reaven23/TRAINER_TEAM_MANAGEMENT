@@ -8,7 +8,7 @@ class PlayerAssessmentsController < ApplicationController
 
   def create
     @assessment = @user.player_assessments.build(assessment_params)
-    @assessment.assessment_date = Date.current
+    @assessment.assessment_date = Time.current.to_date
 
     if @assessment.save
       respond_to do |format|

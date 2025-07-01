@@ -1,0 +1,109 @@
+// Styles pour les boutons de statut des compétences
+.user-skills-page {
+  .d-flex.flex-row.gap-1 {
+    .btn {
+      min-width: 40px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      margin-bottom: 4px;
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .list-group-item {
+    .d-flex.flex-column {
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover .d-flex.flex-column {
+      opacity: 1;
+    }
+  }
+
+  // Styles spécifiques pour chaque statut
+  .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+
+    &:hover {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+    }
+  }
+
+  .btn-outline-warning {
+    border-color: #ffc107;
+    color: #856404;
+
+    &:hover {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #212529;
+    }
+  }
+
+  .btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+
+    &:hover {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+  }
+
+  // Animation pour les changements de statut
+  .badge {
+    transition: all 0.3s ease;
+  }
+
+  .skill-name {
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  // Styles pour les labels sous les boutons
+  .d-flex.flex-row.gap-2 {
+    small {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-align: center;
+      min-width: 40px;
+      flex-shrink: 0;
+      padding-left: 2px;
+      padding-right: 2px;
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  // S'assurer que les formulaires flex s'affichent correctement
+  form.d-flex.flex-row.gap-1 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.25rem !important;
+  }
+}
